@@ -1,3 +1,9 @@
 from django.db import models
+from materials.choices import MaterialChoices
 
-# Create your models here.
+class Material(models.Model):
+    name = models.CharField(
+        max_length=100,
+        choices=MaterialChoices.choices,
+        default=MaterialChoices.PLA_SERIES
+    )
