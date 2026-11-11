@@ -1,0 +1,90 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+    Home · FigureForge
+{% endblock %}
+
+{% block content %}
+
+    <section class="hero">
+        <p class="eyebrow">FIGUREFORGE COLLECTION</p>
+
+        <h1>Build Your Own World of Collectible Figures.</h1>
+
+        <p>
+            Discover collectible figures, materials, and manufacturers.
+            Share reviews and submit inquiries.
+        </p>
+
+        <a class="btn" href="{% url 'figures:list' %}">
+            Explore Collection
+        </a>
+
+        <a class="btn btn-secondary" href="{% url 'figures:add' %}">
+            Add Figure
+        </a>
+    </section>
+
+    <section class="section">
+        <h2>Our Collection in Numbers</h2>
+
+        <div class="cards">
+            <article class="card">
+                <h3>{{ figure_count }}</h3>
+                <p>Figures</p>
+            </article>
+
+            <article class="card">
+                <h3>{{ manufacture_count }}</h3>
+                <p>Manufacturers</p>
+            </article>
+
+            <article class="card">
+                <h3>{{ review_count }}</h3>
+                <p>Reviews</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Recently Added Figures</h2>
+
+        <div class="cards">
+            {% for item in latest %}
+                <article class="card">
+
+                    {% if item.image_url %}
+                        <img
+                            class="figure-img"
+                            src="{{ item.image_url }}"
+                            alt="{{ item.title }}"
+                        >
+                    {% endif %}
+
+                    <h3>{{ item.title }}</h3>
+
+                    <p>
+                        {{ item.character_name }} ·
+                        {{ item.base_price }} BGN
+                    </p>
+
+                    <a href="{% url 'figures:detail' item.pk %}">
+                        View Details
+                    </a>
+
+                </article>
+
+            {% empty %}
+                <p>
+                    No figures have been added yet.
+                    <a href="{% url 'manufacturers:add' %}">
+                        Start by adding a manufacturer
+                    </a>,
+                    then add a material and your first figure.
+                </p>
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}
