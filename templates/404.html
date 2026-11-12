@@ -1,0 +1,20 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="not-found-img">
+        <img src="{% static 'images/FigureForge Robot’s 404 Search.gif' %}" alt="404 not found gif">
+    </div>
+
+    <div class="not-found">
+        <h1>
+            Uh oh,<br> something broke.
+        </h1>
+
+        <h3>Error 404 - page not found.</h3>
+
+        <a href="{% url 'common:home' %}">
+            <button>Return to Petstagram</button>
+        </a>
+    </div>
+{% endblock %}
