@@ -26,3 +26,6 @@ urlpatterns = [
     path('reviews/',include('reviews.urls')),
     path('requests/',include('user.urls')),
 ]
+
+handler404 = 'common.views.page_not_found'
+

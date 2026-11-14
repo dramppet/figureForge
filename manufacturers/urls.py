@@ -6,7 +6,7 @@ urlpatterns=[
     path('add/',views.ItemCreate.as_view(),name='add'),
     path('<int:pk>/',include([
         path('',views.ItemDetail.as_view(),name='detail'),
-        path('update/',views.ItemUpdate.as_view(),name='update'),
+        path('update/',views.ItemUpdate.as_view(),name='edit'),
         path('delete/',views.ItemDelete.as_view(),name='delete'),
     ])),
 ]
