@@ -7,7 +7,6 @@ class Manufacturer(models.Model):
     country =models.CharField(
         max_length=50,
     )
-    website = models.URLField()
 
     class Meta:
         ordering = ['name',]
