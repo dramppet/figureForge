@@ -106,9 +106,6 @@ class ItemUpdate(UpdateView):
 
         return context
 
-    def form_invalid(self, form):
-        print("EDIT FORM ERRORS:", form.errors.as_json())
-        return super().form_invalid(form)
 
 
 

@@ -1,4 +1,4 @@
-{% extends 'shared/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
@@ -8,13 +8,13 @@
 
     <div class="not-found">
         <h1>
-            Uh oh,<br> something broke.
+            Uh oh,  something broke.
         </h1>
 
         <h3>Error 404 - page not found.</h3>
 
-        <a href="{% url 'common:home' %}">
-            <button>Return to Petstagram</button>
+        <a href="{% url 'common:home-page' %}">
+            <button>Return to FigureForge</button>
         </a>
     </div>
 {% endblock %}
