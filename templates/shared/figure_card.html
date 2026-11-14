@@ -1,0 +1,12 @@
+<article class="card">
+    <h3>{{ figure.title }}</h3>
+    {% if figure.image_url %}
+        <img src="{{ figure.image_url }}" alt="{{ figure.title }}" loading="lazy">
+    {% endif %}
+    <p>
+        {{ figure.character_name }}
+    </p>
+    <p>
+        {{ figure.base_price }} лв.
+    </p>
+</article>

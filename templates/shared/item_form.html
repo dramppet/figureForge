@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load figureforge_tags %}
+
+{% block title %}
+    {{ page_title }} · FigureForge
+{% endblock %}
+
+{% block content %}
+    <section class="section narrow">
+
+        <h1>{{ page_title }}</h1>
+
+        <form method="post" class="card form-card" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="field">
+
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+
+                        {% if field.field.required %}
+                            *
+                        {% endif %}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <small>
+                            {{ field.help_text }}
+                        </small>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <p class="errors">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+
+                </div>
+            {% endfor %}
+
+            <button class="btn" type="submit">
+                Save
+            </button>
+
+            <a href="{% url section|add:':list' %}">
+                Cancel
+            </a>
+
+        </form>
+
+    </section>
+{% endblock %}

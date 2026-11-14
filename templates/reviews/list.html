@@ -1,0 +1,32 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+    Reviews · FigureForge
+{% endblock %}
+
+{% block content %}
+
+    <section class="container section">
+
+        <h1>Reviews</h1>
+
+        <div class="grid">
+
+            {% for review in reviews %}
+
+                <article class="card">
+                    <h3>{{ review }}</h3>
+                </article>
+
+            {% empty %}
+
+                <p>No reviews yet.</p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+{% endblock %}

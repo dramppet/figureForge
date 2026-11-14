@@ -1,0 +1,123 @@
+
+{% extends 'base.html' %}
+{% load figureforge_tags %}
+
+{% block title %}
+    {{ page_title }} · FigureForge
+{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <p class="eyebrow">CATALOG</p>
+
+        <h1>{{ page_title }}</h1>
+
+        <p>
+            <a class="btn" href="{% url section|add:':add' %}">
+                + Add New
+            </a>
+        </p>
+
+        <form method="get" class="searchbar">
+            <input
+                type="text"
+                name="q"
+                value="{{ request.GET.q }}"
+                placeholder="Search..."
+            >
+
+            <select name="sort">
+                <option value="">Default</option>
+                <option value="name">Name A–Z</option>
+                <option value="-name">Name Z–A</option>
+                <option value="title">Title A–Z</option>
+                <option value="-title">Title Z–A</option>
+                <option value="base_price">Price: Low to High</option>
+                <option value="-base_price">Price: High to Low</option>
+                <option value="-pk">Newest</option>
+            </select>
+
+            <button class="btn" type="submit">
+                Apply
+            </button>
+        </form>
+
+        <div class="cards">
+            {% for item in items %}
+                <article class="card">
+                    {% if item.image_url %}
+                        <img
+                            class="figure-img"
+                            src="{{ item.image_url }}"
+                            alt="{{ item.title }}"
+                        >
+                    {% endif %}
+
+                    <h2>
+                        {% if item.title %}
+                            {{ item.title|short_label }}
+                        {% elif item.name %}
+                            {{ item.name|short_label }}
+                        {% elif item.author_name %}
+                            {{ item.author_name|short_label }}
+                        {% else %}
+                            No name
+                        {% endif %}     
+                            {% if item.rating is not None %}
+            <span class="rating">
+                ⭐ {{ item.rating }}/5
+            </span>
+        {% endif %}
+                    </h2>
+
+                    <p>
+                    </p>
+
+                    {% if item.base_price %}
+                        <p>
+                            <strong>
+                                {{ item.base_price }} BGN
+                            </strong>
+                        </p>
+                    {% endif %}
+
+                    <p>
+                        <a href="{% url section|add:':detail' item.pk %}">
+                            Details
+                        </a>
+                        ·
+                        <a href="{% url section|add:':edit' item.pk %}">
+                            Edit
+                        </a>
+                        ·
+                        <a href="{% url section|add:':delete' item.pk %}">
+                            Delete
+                        </a>
+                    </p>
+                </article>
+            {% empty %}
+                <p>
+                    No records found. Use the Add New button to create one.
+                </p>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <p class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}&amp;q={{ request.GET.q }}&amp;sort={{ request.GET.sort }}">
+                        Previous
+                    </a>
+                {% endif %}
+
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}&amp;q={{ request.GET.q }}&amp;sort={{ request.GET.sort }}">
+                        Next
+                    </a>
+                {% endif %}
+            </p>
+        {% endif %}
+    </section>
+{% endblock %}

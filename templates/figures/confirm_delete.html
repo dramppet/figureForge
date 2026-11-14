@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Delete Figure · FigureForge
+{% endblock %}
+
+{% block content %}
+    <section class="container section">
+
+        <h1>Delete Figure</h1>
+
+        <form method="post" class="panel">
+            {% csrf_token %}
+
+            <p>
+                Are you sure you want to delete {{ object }}?
+            </p>
+
+            <button class="btn danger" type="submit">
+                Confirm Delete
+            </button>
+
+        </form>
+
+    </section>
+{% endblock %}

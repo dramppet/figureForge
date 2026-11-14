@@ -1,0 +1,169 @@
+
+{% load figureforge_tags %}
+{% extends 'base.html' %}
+
+{% block title %}
+    Details · FigureForge
+{% endblock %}
+
+{% block content %}
+    <section class="section">
+
+        <a href="{% url section|add:':list' %}">
+            ← Back to List
+        </a>
+
+        <h1>
+            {% if section == 'figures' %}
+                {{ item.title }}
+            {% elif section == 'manufacturers' %}
+                {{ item.name }}
+            {% elif section == 'reviews' %}
+                {{ item.author_name }}
+            {% else %}
+                {{ item }}
+            {% endif %}
+        </h1>
+
+        <article class="card detail">
+
+            {% if item.image_url %}
+                <img
+                    class="figure-img"
+                    src="{{ item.image_url }}"
+                    alt="{{ item.title }}"
+                >
+            {% endif %}
+
+            <p>
+                <strong>
+                                    {% if section == 'figures' %}
+                    <p>
+                        <strong>{{ item.character_name }}</strong>
+                    </p>
+                {% elif section == 'manufacturers' %}
+                    <p>
+                        <strong>{{ item.country }}</strong>
+                    </p>
+                {% elif section == 'user' %}
+                    <p>
+                        <strong>{{ item.email }}</strong>
+                    </p>
+                {% endif %}
+                </strong>
+            </p>
+
+            {% if item.base_price %}
+                <p>
+                    Price: {{ item.base_price }} BGN
+                    · Height: {{ item.height }} cm
+                </p>
+
+                <p>
+                    Manufacturer:
+                    <a href="{% url 'manufacturers:detail' item.manufacturers.pk %}">
+                        {{ item.manufacturers }}
+                    </a>
+                </p>
+
+                <p>
+                    Materials:
+                    {% for material in item.materials.all %}
+                        {{ material }}
+                        {% if not forloop.last %}
+                            ,
+                        {% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            {% if item.website %}
+                <p>
+                    <a
+                        href="{{ item.website }}"
+                        rel="noopener noreferrer"
+                    >
+                        Website
+                    </a>
+                </p>
+            {% endif %}
+
+            {% if item.rating %}
+                <p>
+                    Rating: {{ item.rating }}/5
+                </p>
+            {% endif %}
+
+            {% if item.comment %}
+                <p>
+                    {{ item.comment }}
+                </p>
+            {% endif %}
+
+            {% if item.figure %}
+                <p>
+                    Figure: {{ item.figure }}
+                </p>
+            {% endif %}
+
+            <p>
+                <a
+                    class="btn"
+                    href="{% url section|add:':edit' item.pk %}"
+                >
+                    Edit
+                </a>
+
+                <a
+                    class="btn btn-secondary"
+                    href="{% url section|add:':delete' item.pk %}"
+                >
+                    Delete
+                </a>
+            </p>
+
+        </article>
+
+        {% if section == 'figures' %}
+
+            <h2>Reviews</h2>
+
+            <p>
+                <a href="{% url 'reviews:add' %}">
+                    Write a Review
+                </a>
+
+                ·
+
+                <a href="{% url 'user:add' %}">
+                    Submit a Request
+                </a>
+            </p>
+
+            {% for review in item.reviews.all %}
+
+                <article class="card">
+
+                    <strong>
+                        {{ review.author_name }}
+                        · {{ review.rating }}/5
+                    </strong>
+
+                    <p>
+                        {{ review.comment }}
+                    </p>
+
+                </article>
+
+            {% empty %}
+
+                <p>
+                    No reviews yet.
+                </p>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </section>
+{% endblock %}

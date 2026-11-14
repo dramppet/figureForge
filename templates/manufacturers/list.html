@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}
+    Manufactures · FigureForge
+{% endblock %}
+{% block content %}
+    <section class="container section"><h1>
+        Manufactures</h1><div class="grid">
+        {% for manufacturer in manufacturers %}
+            <article class="card"><h3>
+                {{ manufacturer }}</h3>
+            </article>{% empty %}
+            <p>No manufactures.</p>{% endfor %}</div></section>{% endblock %}

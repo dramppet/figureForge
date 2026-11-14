@@ -1,0 +1,12 @@
+{% extends 'base.html' %}{% block title %}
+    Forms from manufactures · FigureForge
+{% endblock %}{% block content %}
+    <section class="container section">
+        <h1> Forms from manufactures</h1>
+        <form method="post" class="panel">
+            {% include 'shared/form_fields.html' %}
+            <button class="btn" type="submit">
+                Save</button>
+        </form>
+    </section>
+{% endblock %}

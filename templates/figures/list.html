@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Figure Catalog · FigureForge
+{% endblock %}
+
+{% block content %}
+    <section class="container section">
+
+        <h1>Figure Catalog</h1>
+
+        <div class="grid">
+
+            {% for figure in figures %}
+
+                {% include 'shared/figure_card.html' %}
+
+            {% empty %}
+
+                <p>
+                    No figures have been added yet.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+{% endblock %}

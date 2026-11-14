@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    New Request · FigureForge
+{% endblock %}
+
+{% block content %}
+    <section class="container section">
+
+        <h1>New Request</h1>
+
+        <form method="post" class="panel">
+            {% csrf_token %}
+
+            {% include 'shared/form_fields.html' %}
+
+            <button class="btn" type="submit">
+                Submit
+            </button>
+
+        </form>
+
+    </section>
+{% endblock %}

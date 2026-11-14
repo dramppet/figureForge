@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Filtered Figures · FigureForge
+{% endblock %}
+
+{% block content %}
+    <section class="container section">
+
+        <h1>Filtered Figures</h1>
+
+        <p class="muted">
+            Search and sorting results
+        </p>
+
+        <div class="grid">
+
+            {% for figure in figures %}
+
+                {% include 'shared/figure_card.html' %}
+
+            {% empty %}
+
+                <p>
+                    No figures found.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+{% endblock %}

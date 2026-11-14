@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Figure Details · FigureForge
+{% endblock %}
+
+{% block content %}
+    <section class="container section">
+
+        <h1>Figure Details</h1>
+
+        <div class="panel">
+
+            <h2>{{ figure.title }}</h2>
+
+            <p>
+                Character: {{ figure.character_name }}
+            </p>
+
+            <p>
+                Price: {{ figure.base_price }} €
+            </p>
+
+            <p>
+                Height: {{ figure.height }} cm
+            </p>
+
+        </div>
+
+    </section>
+{% endblock %}

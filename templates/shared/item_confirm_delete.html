@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load figureforge_tags %}
+
+{% block title %}
+    Delete · FigureForge
+{% endblock %}
+
+{% block content %}
+    <section class="section narrow">
+
+        <h1>Confirm Deletion</h1>
+
+        <div class="card">
+
+            <p>
+                Are you sure you want to delete
+                <strong>{{ object }}</strong>?
+                This action cannot be undone.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <button class="btn danger" type="submit">
+                    Yes, Delete
+                </button>
+
+                <a href="{% url section|add:':list' %}">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </section>
+{% endblock %}
