@@ -4,17 +4,32 @@ Django catalog of collectible figures, manufacturers, materials, reviews and req
 
 ## Local setup
 
-1. Install Python compatible with the pinned Django version.
-2. Create and activate a virtual environment.
-3. Run `pip install -r requirements.txt`.
-4. Run `python manage.py migrate`.
-5. Run `python manage.py runserver`.
-6. Open http://127.0.0.1:8000/ and use the navigation to create manufacturers and materials before figures.
+1. Create a virtual environment: `python -m venv .venv`
+2. Activate it (Windows PowerShell): `.\.venv\Scripts\Activate.ps1`
+3. Install dependencies: `python -m pip install -r requirements.txt`
+4. Apply migrations: `python manage.py migrate`
+5. Start the server: `python manage.py runserver`
+6. Open http://127.0.0.1:8000/.
 
-The default database is SQLite and does not require credentials. To use PostgreSQL, set `DB_ENGINE=postgresql` and supply `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` in your local `.env` file. 
+No environment variables are required for local testing. For a custom secret key, copy `.env.example` to `.env` and set `SECRET_KEY`. Never commit `.env` or production credentials.
 
-## Features
+## Usage
 
-Figure catalog with search and sorting; figure, manufacturer and material CRUD; reviews and requests; deletion confirmation and read-only figure fields on the deletion page.
+Create a manufacturer and at least one material through the navigation, then add figures. Reviews and requests can also be created from the navigation. Lists provide searching and sorting; detail, edit and delete pages are accessible from each record. Deletion requires confirmation.
+
+## Structure
+
+- `common`: home page and custom 404 handler
+- `figures`: collectible figure catalog and CRUD
+- `manufacturers`: figure manufacturers and CRUD
+- `materials`: available materials and CRUD
+- `reviews`: ratings and comments
+- `user`: customer requests (not authentication)
+
+Figure has a many-to-one relationship with Manufacturer and a many-to-many relationship with Material.
+
+## Important
+
+The default configuration is for local development (`DEBUG=True`), not production deployment.
 
 
