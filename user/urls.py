@@ -8,5 +8,5 @@ urlpatterns=[
     path('<int:pk>/',include([
      path('',views.ItemDetail.as_view(),name='detail'),
     path('<int:pk>/edit/',views.ItemUpdate.as_view(),name='edit'),
-    path('<int:pk>/delete/',views.ItemDelete.as_view(),name='delete')])
+    path('<int:pk>/delete/',views.ItemDelete.as_view(),name='delete')]))
 ]
