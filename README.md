@@ -1,4 +1,4 @@
-#FigureForge — Collectible Figures Management System
+# FigureForge — Collectible Figures Management System
 
 ##Django web application | PostgreSQL | SoftUni Django Basics Retake Exam
 
