@@ -131,23 +131,17 @@ Figure (1) ─────────────── (N) Review
                                  
 Figure (1) ─────────────── (N) Client
 Material (1) ──────────── (N) Client
-
 ```
 
-Model	Important fields	Relationships
-Manufacturer	name, country	One manufacturer can have many figures
-Material	name (unique)	Many-to-many with figures
-Figure	title, character_name, base_price, height, slug	Foreign key to manufacturer; many-to-many to materials
-Review	author_name, rating, comment, created_at	Foreign key to figure
-Client	name, email, status_order, created_at	Foreign keys to figure and selected material
-
-
+```
 Relationships
 Manufacturer (1) ────── (many) Figure
 Figure       (many) ─── (many) Material
 Figure       (1) ────── (many) Review
 Figure       (1) ────── (many) Client
 Material     (1) ────── (many) Client
+```
+
 Deleting a manufacturer referenced by a figure is restricted by PROTECT. Deleting a figure cascades to its related reviews and client orders according to the model definitions.
 Installation
 1. Clone the repository
