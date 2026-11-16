@@ -123,7 +123,7 @@ The database contains five main application models:
 * Client — name, unique email, order status, figure, chosen material, creation date
 
   ```
-  Manufacturer (1) ──────── (N) Figure
+Manufacturer (1) ──────── (N) Figure
                                  │
 Material (N) ──────────── (N) ───┤
                                  │
