@@ -1,12 +1,11 @@
 # FigureForge — Collectible Figures Management System
 
-## Django web application | PostgreSQL |
+## Django web application | PostgreSQL 
 
 FigureForge is a web application for managing collectible figures, manufacturers, materials, customer orders, and reviews. It provides a browsable catalog and forms for managing related data directly through the website.
 ---
 Table of Contents
 * Project Overview
-* Features
 * Technology Stack
 * Project Structure
 * Database Schema
@@ -35,7 +34,7 @@ The project organizes collectible figure information in a relational PostgreSQL 
 * Custom 404 — Page Not Found page
 * PostgreSQL persistence using Django ORM
   
-Technology Stack
+## Technology Stack
 - Python
 - Django — web framework, templates, forms, ORM, and class-based views
 - PostgreSQL — relational database
@@ -45,7 +44,7 @@ Technology Stack
 
 ---
 
-Project Structure
+## Project Structure
 
 ```
 figureForge/
@@ -113,7 +112,7 @@ figureForge/
 
 ---
 
-# Database Schema
+## Database Schema
 
 The database contains five main application models:
 * Manufacturer — name, country
@@ -122,15 +121,13 @@ The database contains five main application models:
 * Review — author name, rating, comment, creation date, figure
 * Client — name, unique email, order status, figure, chosen material, creation date
 
-  ```
-Manufacturer (1) ──────── (N) Figure
-                                 │
-Material (N) ──────────── (N) ───┤
-                                 │
-Figure (1) ─────────────── (N) Review
-                                 
-Figure (1) ─────────────── (N) Client
-Material (1) ──────────── (N) Client
+```mermaid
+erDiagram
+    MANUFACTURER ||--o{ FIGURE : produces
+    FIGURE }o--o{ MATERIAL : uses
+    FIGURE ||--o{ REVIEW : has
+    FIGURE ||--o{ CLIENT : requested_by
+    MATERIAL ||--o{ CLIENT : selected_by
 ```
 
 ```
@@ -141,162 +138,182 @@ Figure       (1) ────── (many) Review
 Figure       (1) ────── (many) Client
 Material     (1) ────── (many) Client
 ```
+---
+## Installation
 
-Deleting a manufacturer referenced by a figure is restricted by PROTECT. Deleting a figure cascades to its related reviews and client orders according to the model definitions.
-Installation
-1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-cd YOUR_REPOSITORY
-Replace the placeholders with your actual public repository URL and directory name. Run the remaining commands from the directory containing manage.py.
-2. Create a virtual environment
+* Clone the repository
+```
+[git clone https:(https://github.com/dramppet/figureForge.git)
+```
+* Create a virtual environment:
+```
 python -m venv .venv
-Windows (PowerShell):
-.\.venv\Scripts\Activate.ps1
-Windows (Command Prompt):
-.venv\Scripts\activate.bat
-macOS / Linux:
+```
+* Activate the virtual environment.
+
+* **Windows:
+```
+.venv\Scripts\activate
+```
+* **macOS / Linux:
+```
 source .venv/bin/activate
-3. Install dependencies
-python -m pip install -r requirements.txt
-Ensure requirements.txt is saved as UTF-8. The uploaded project previously contained a UTF-16 version.
+```
+* Install dependencies:
+```
+pip install -r requirements.txt
+```
 
-4. Create a PostgreSQL database
-Install and start PostgreSQL. Connect as a PostgreSQL administrator and execute:
-CREATE USER figureforge_user WITH PASSWORD 'replace_with_strong_password';
-CREATE DATABASE figureforge_db OWNER figureforge_user;
-The example credentials are for local setup only. Do not reuse the example password in production.
-Environment Variables
-Create a .env file next to manage.py:
+## Environment Variables
+
+Create a .env file in the project root, alongside manage.py.
+```
+Example:
 DB_NAME=figureforge_db
-DB_USER=figureforge_user
-DB_PASSWORD=replace_with_strong_password
-DB_HOST=127.0.0.1
+DB_USER=your_postgres_user
+DB_PASSWORD=your_postgres_password
+DB_HOST=localhost
 DB_PORT=5432
-The current figureForge/settings.py reads these five variables using decouple.config and connects to PostgreSQL via django.db.backends.postgresql.
+```
 
-Security: Do not commit .env, real credentials, .venv, or local database backups. The uploaded version currently hardcodes SECRET_KEY and enables DEBUG; these settings should be secured before production deployment. This README does not claim that SECRET_KEY and DEBUG are already read from .env.
-Running the Application
-Apply the migrations:
-python manage.py migrate
-Start the local development server:
+The database settings in figureForge/settings.py read these values using python-decouple. Make sure PostgreSQL is running and the database already exists.
+
+
+## Running the Application
+
+* Start the Django development server:
+```  
 python manage.py runserver
-Open the website:
+```
+* Open the application in your browser:
+```
 http://127.0.0.1:8000/
-Django's standard development server uses port 8000 unless another port is specified.
-Web Endpoints
-Base URL: http://127.0.0.1:8000
+```
 
-These are HTML page routes, not REST JSON endpoints. GET displays pages or forms. POST submits create/update forms or confirms deletion. Replace <id> with an existing numeric database primary key, such as 1.
-Homepage and Administration
-Method	URL	Purpose
-GET	/	Homepage with latest figures and record counts
-GET	/admin/	Built-in Django admin login/interface (not required for project data entry)
+## Web Endpoints
 
+### Figure Endpoints
 
-Figures
-Method	URL	Purpose
-GET	/figures/	List figures; search, sort, and paginate
-GET, POST	/figures/add/	Display form / create a figure
-GET	/figures/<id>/	View a figure's details
-GET, POST	/figures/<id>/update/	Display form / update the figure
-GET, POST	/figures/<id>/delete/	Display confirmation / delete the figure
-
-
-Manufacturers
-Method	URL	Purpose
-GET	/manufacturers/	List manufacturers
-GET, POST	/manufacturers/add/	Display form / create a manufacturer
-GET	/manufacturers/<id>/	View manufacturer details
-GET, POST	/manufacturers/<id>/update/	Display form / update manufacturer
-GET, POST	/manufacturers/<id>/delete/	Display confirmation / delete manufacturer
-
-
-Materials
-Method	URL	Purpose
-GET	/materials/	List materials
-GET, POST	/materials/add/	Display form / create a material
-GET	/materials/<id>/	View material details
-GET, POST	/materials/<id>/update/	Display form / update material
-GET, POST	/materials/<id>/delete/	Display confirmation / delete material
-
-
-Reviews
-Method	URL	Purpose
-GET	/reviews/	List reviews
-GET, POST	/reviews/add/	Display form / create a review
-GET	/reviews/<id>/	View review details
-GET, POST	/reviews/<id>/edit/	Display form / update review
-GET, POST	/reviews/<id>/delete/	Display confirmation / delete review
-
-
-Customer Orders
-The URLs use /requests/ while the Django app is named user and the database model is named Client.
-Method	URL	Purpose
-GET	/requests/	List customer orders
-GET, POST	/requests/add/	Display form / create an order
-GET	/requests/<id>/	View order details
-GET, POST	/requests/<id>/edit/	Display form / update order
-GET, POST	/requests/<id>/delete/	Display confirmation / delete order
-
-
-Custom 404 Page
-An unmatched URL, such as /does-not-exist/, returns the custom 404.html template with HTTP status 404 when Django's production-style error handling is active (DEBUG=False). The root URL configuration registers handler404 = 'common.views.page_not_found'.
-Filtering, Sorting and Pagination
-List views accept URL query parameters. These parameters do not create additional Django URL routes.
-Page	Search parameter	Allowed sort values
-Figures	q — title or character name	title, -title, base_price, -base_price, -pk
-Manufacturers	q — name	Check the manufacturer list view for supported sorting
-Materials	q — material name	name, -name
-Reviews	q — author name or comment	pk, -pk
-Orders	q — customer name	pk, -pk
-
-
-Examples:
-/figures/?q=naruto
+* List all figures:
+```
+GET /figures/
+```
+*Create a figure:
+```
+GET  /figures/add/
+POST /figures/add/
+```
+* View figure details:
+```
+GET /figures/{id}/
+```
+* Update a figure:
+```
+GET  /figures/{id}/update/
+POST /figures/{id}/update/
+```
+* Delete a figure:
+```
+GET  /figures/{id}/delete/
+POST /figures/{id}/delete/
+```
+The catalog view supports search and sorting through query parameters. For example:
+```
+/figures/?q=batman
 /figures/?sort=base_price
 /figures/?sort=-base_price
-/figures/?page=2
-/materials/?q=resin
-/reviews/?sort=-pk
-/requests/?q=alex
-The list views use paginate_by = 12. The page parameter selects a result page.
-Working with an Empty Database
-No prepopulated data should be required. After migrations, use the website's navigation and forms in this order:
-1. Open /manufacturers/add/ and create a manufacturer.
-2. Open /materials/add/ and create one or more materials.
-3. Open /figures/add/ and create a figure using the existing manufacturer and materials.
-4. Open /reviews/add/ to review an existing figure.
-5. Open /requests/add/ to create a customer order for a figure and material.
-6. Visit the list pages to inspect, edit, and delete records.
-This order matters because figures reference manufacturers/materials, and reviews/orders reference existing figures.
-Validation and Error Handling
-- Figure price must be at least 0.01.
-- Figure height must be at least 5.
-- Figure slugs are unique.
-- Material names are unique.
-- Review ratings are limited to values from 1 to 5.
-- Customer email addresses must be valid and unique.
-- Deletion views present a confirmation page before a POST request removes an object.
-- Nonexistent routes are handled by the custom 404 view when DEBUG=False.
-Additional form-specific checks and messages are defined in each application's forms.py.
-Testing
-Run Django's configuration checks:
-python manage.py check
-Check whether model changes need migrations:
-python manage.py makemigrations --check --dry-run
-Run Django tests (if test cases are implemented):
-python manage.py test
-Manual verification checklist: create, inspect, update, and delete a record for each model; test invalid form input; test sorting and pagination; and open a nonexistent URL with DEBUG=False and a suitable ALLOWED_HOSTS setting.
-The commands and routes above were documented from the uploaded project source. They are not a claim that all migrations and browser flows have already passed a live test.
+```
+---
 
-Future Improvements
-- Add automated tests for forms, views, and model relationships
-- Improve validation messages and deletion handling for protected records
-- Add more advanced figure filters
-- Improve catalog image handling and responsive layouts
-- Move deployment-sensitive settings to environment variables
-- Add deployment documentation and automated CI checks
-Author and Academic Context
-FigureForge — Django Basics Retake Exam individual project, SoftUni (2026).
+### Manufacturer Endpoints
 
-The project is intended to demonstrate Django models, relational database design, forms, class-based views, template inheritance, navigation, validation, and CRUD operations.
+```
+GET  /manufacturers/
+GET  /manufacturers/add/
+POST /manufacturers/add/
+GET  /manufacturers/{id}/
+GET  /manufacturers/{id}/update/
+POST /manufacturers/{id}/update/
+GET  /manufacturers/{id}/delete/
+POST /manufacturers/{id}/delete/
+```
+Each manufacturer has a name and country. A manufacturer referenced by a figure is protected from deletion through on_delete=models.PROTECT.
+
+---
+
+### Material Endpoints
+
+```
+GET  /materials/
+GET  /materials/add/
+POST /materials/add/
+GET  /materials/{id}/
+GET  /materials/{id}/update/
+POST /materials/{id}/update/
+GET  /materials/{id}/delete/
+POST /materials/{id}/delete/
+```
+Materials are stored as separate database records with unique names. A figure can use multiple materials.
+
+---
+
+### Review Endpoints
+```
+GET  /reviews/
+GET  /reviews/add/
+POST /reviews/add/
+GET  /reviews/{id}/
+GET  /reviews/{id}/edit/
+POST /reviews/{id}/edit/
+GET  /reviews/{id}/delete/
+POST /reviews/{id}/delete/
+```
+Each review belongs to a figure and contains an author, comment, and rating from 1 to 5. Reviews are ordered by creation date, newest first.
+
+---
+
+### Customer Endpoints
+```
+GET  /requests/
+GET  /requests/add/
+POST /requests/add/
+GET  /requests/{id}/
+GET  /requests/{id}/edit/
+POST /requests/{id}/edit/
+GET  /requests/{id}/delete/
+POST /requests/{id}/delete/
+```
+A request links a customer name and email to a selected figure and material. The order status defaults to Pending. The user app manages customer requests; it does not implement login or registration.
+
+---
+
+### Home Page & Error Handling
+
+Home page:
+```
+GET /
+```
+The home page provides navigation to the catalog and other sections. A custom handler404 renders the project's 404 page for unmatched URLs when Django is running with DEBUG=False and an appropriate host configuration.
+
+---
+
+## Data Validation
+Django model fields and forms enforce validation rules, including:
+* Figure price must be at least 0.01
+* Figure height must be at least 5 cm
+* Figure slug must be unique and is generated from the title and character name when missing
+* Material name must be unique
+* Review rating must be between 1 and 5
+* Customer email must be a valid email format and unique
+* Customer request status uses predefined choices
+  
+---
+
+## Architectural Decisions
+
+* Django Class-Based Views are used to implement reusable list, detail, create, update, and delete workflows.
+* Django ORM manages database access and model relationships, avoiding manual SQL for normal application operations.
+* PostgreSQL is configured as the database backend through environment-based connection settings.
+* ModelForms provide form generation and validation based on the Django models.
+*Reusable templates keep the interface consistent across different catalog sections.
+
