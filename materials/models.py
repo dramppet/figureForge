@@ -1,5 +1,4 @@
 from django.db import models
-from materials.choices import MaterialChoices
 
 class Material(models.Model):
     name = models.CharField(

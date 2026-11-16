@@ -1,51 +1,215 @@
+
 {% extends 'base.html' %}
 {% load figureforge_tags %}
-
 
 {% block title %}
     Details · FigureForge
 {% endblock %}
 
 {% block content %}
-    <select name="sort">
-         <option value="">Default</option>
+<section class="section">
 
-    {% if section == 'figures' %}
-        <option value="title"
-            {% if request.GET.sort == 'title' %}selected{% endif %}>
-            Title A–Z
-        </option>
+    <a href="{% url section|add:':list' %}">
+        ← Back to list
+    </a>
 
-        <option value="-title"
-            {% if request.GET.sort == '-title' %}selected{% endif %}>
-            Title Z–A
-        </option>
+    <h1>
+        {% if section == 'figures' %}
+            {{ item.title }}
+        {% elif section == 'reviews' %}
+            Review by {{ item.author_name }}
+        {% elif section == 'user' %}
+            Request by {{ item.name }}
+        {% else %}
+            {{ item.name }}
+        {% endif %}
+    </h1>
 
-        <option value="base_price"
-            {% if request.GET.sort == 'base_price' %}selected{% endif %}>
-            Price: Low to High
-        </option>
+    <article class="card detail">
 
-        <option value="-base_price"
-            {% if request.GET.sort == '-base_price' %}selected{% endif %}>
-            Price: High to Low
-        </option>
+        {% if section == 'figures' %}
 
-    {% elif section == 'manufacturers' or section == 'materials' %}
-        <option value="name"
-            {% if request.GET.sort == 'name' %}selected{% endif %}>
-            Name A–Z
-        </option>
+            <h2>{{ item.character_name }}</h2>
 
-        <option value="-name"
-            {% if request.GET.sort == '-name' %}selected{% endif %}>
-            Name Z–A
-        </option>
-    {% endif %}
+            <p>
+                <strong>Price:</strong>
+                {{ item.base_price }} BGN
+            </p>
 
-    <option value="-pk"
-        {% if request.GET.sort == '-pk' %}selected{% endif %}>
-        Newest
-    </option>
-</select>
+            <p>
+                <strong>Height:</strong>
+                {{ item.height }} cm
+            </p>
+
+            <p>
+                <strong>Manufacturer:</strong>
+                <a href="{% url 'manufacturers:detail' item.manufacturers.pk %}">
+                    {{ item.manufacturers.name }}
+                </a>
+            </p>
+
+            <h3>Materials</h3>
+
+            <ul>
+                {% for material in item.materials.all %}
+                    <li>
+                        <a href="{% url 'materials:detail' material.pk %}">
+                            {{ material.name }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>No materials available.</li>
+                {% endfor %}
+            </ul>
+
+            <h3>Reviews</h3>
+
+            {% for review in item.reviews_author.all %}
+                <div class="card">
+                    <p>
+                        <strong>{{ review.author_name }}</strong>
+                        — ⭐ {{ review.rating }}/5
+                    </p>
+
+                    <p>{{ review.comment }}</p>
+
+                    <a href="{% url 'reviews:detail' review.pk %}">
+                        View review
+                    </a>
+                </div>
+            {% empty %}
+                <p>No reviews yet.</p>
+            {% endfor %}
+
+        {% elif section == 'manufacturers' %}
+
+            <p>
+                <strong>Manufacturer:</strong>
+                {{ item.name }}
+            </p>
+
+            <p>
+                <strong>Country:</strong>
+                {{ item.country }}
+            </p>
+
+            <h3>Figures</h3>
+
+            <ul>
+                {% for figure in item.figures.all %}
+                    <li>
+                        <a href="{% url 'figures:detail' figure.pk %}">
+                            {{ figure.title }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>No figures available.</li>
+                {% endfor %}
+            </ul>
+
+        {% elif section == 'materials' %}
+
+            <p>
+                <strong>Material:</strong>
+                {{ item.name }}
+            </p>
+
+            <h3>Figures using this material</h3>
+
+            <ul>
+                {% for figure in item.figures_materials.all %}
+                    <li>
+                        <a href="{% url 'figures:detail' figure.pk %}">
+                            {{ figure.title }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>No figures use this material.</li>
+                {% endfor %}
+            </ul>
+
+        {% elif section == 'reviews' %}
+
+            <p>
+                <strong>Author:</strong>
+                {{ item.author_name }}
+            </p>
+
+            <p>
+                <strong>Rating:</strong>
+                ⭐ {{ item.rating }}/5
+            </p>
+
+            <p>
+                <strong>Figure:</strong>
+                <a href="{% url 'figures:detail' item.figure.pk %}">
+                    {{ item.figure.title }}
+                </a>
+            </p>
+
+            <p>
+                <strong>Comment:</strong>
+                {{ item.comment }}
+            </p>
+
+            <p>
+                <strong>Created:</strong>
+                {{ item.created_at|date:"d M Y, H:i" }}
+            </p>
+
+        {% elif section == 'user' %}
+
+            <p>
+                <strong>Client:</strong>
+                {{ item.name }}
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                {{ item.email }}
+            </p>
+
+            <p>
+                <strong>Figure:</strong>
+                <a href="{% url 'figures:detail' item.figure.pk %}">
+                    {{ item.figure.title }}
+                </a>
+            </p>
+
+            <p>
+                <strong>Selected material:</strong>
+                <a href="{% url 'materials:detail' item.chose_material.pk %}">
+                    {{ item.chose_material.name }}
+                </a>
+            </p>
+
+            <p>
+                <strong>Order status:</strong>
+                {{ item.get_status_order_display }}
+            </p>
+
+            <p>
+                <strong>Created:</strong>
+                {{ item.created_at|date:"d M Y, H:i" }}
+            </p>
+
+        {% endif %}
+
+        <div class="actions">
+            <a class="btn" href="{% url section|add:':edit' item.pk %}">
+                Edit
+            </a>
+
+            <a class="btn" href="{% url section|add:':delete' item.pk %}">
+                Delete
+            </a>
+
+            <a href="{% url section|add:':list' %}">
+                Back to list
+            </a>
+        </div>
+
+    </article>
+
+</section>
 {% endblock %}
