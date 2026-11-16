@@ -1,40 +1,40 @@
 # FigureForge — Collectible Figures Management System
 
-##Django web application | PostgreSQL | SoftUni Django Basics Retake Exam
+## Django web application | PostgreSQL |
 
 FigureForge is a web application for managing collectible figures, manufacturers, materials, customer orders, and reviews. It provides a browsable catalog and forms for managing related data directly through the website.
 ---
 Table of Contents
-- Project Overview
-- Features
-- Technology Stack
-- Project Structure
-- Database Schema
-- Installation
-- Environment Variables
-- Running the Application
-- Web Endpoints
-- Filtering, Sorting and Pagination
-- Working with an Empty Database
-- Validation and Error Handling
-- Testing
-- Future Improvements
-Project Overview
+* Project Overview
+* Features
+* Technology Stack
+* Project Structure
+* Database Schema
+* Installation
+* Environment Variables
+* Running the Application
+* Web Endpoints
+* Filtering, Sorting and Pagination
+* Working with an Empty Database
+* Validation and Error Handling
+  
+---
+
+## Project Overview
 The project organizes collectible figure information in a relational PostgreSQL database. Each figure belongs to a manufacturer and can be associated with multiple materials. Visitors can browse figures, submit reviews, and create orders using the website's forms.
 
-The project is a server-rendered Django website, not a JSON REST API. Its endpoints return HTML pages and process submitted forms. Authentication and user accounts are not part of the intended exam scope.
-Features
-- Browse collectible figures and their details
-- Create, view, update, and delete figures
-- Manage manufacturers and materials
-- Add, edit, and delete figure reviews
-- Create and manage customer orders
-- Search and sort catalog records
-- Pagination (12 items per list page)
-- Form validation and deletion confirmation pages
-- Reusable Django templates and custom template functionality
-- Custom 404 — Page Not Found page
-- PostgreSQL persistence using Django ORM
+* Browse collectible figures and their details
+* Create, view, update, and delete figures
+* Manage manufacturers and materials
+* Add, edit, and delete figure reviews
+* Create and manage customer orders
+* Search and sort catalog records
+* Pagination (12 items per list page)
+* Form validation and deletion confirmation pages
+* Reusable Django templates and custom template functionality
+* Custom 404 — Page Not Found page
+* PostgreSQL persistence using Django ORM
+  
 Technology Stack
 - Python
 - Django — web framework, templates, forms, ORM, and class-based views
@@ -42,25 +42,98 @@ Technology Stack
 - HTML / CSS — frontend presentation
 - django-decouple / python-decouple — environment-based database configuration (from decouple import config)
 - Git and GitHub — version control
+
+---
+
 Project Structure
+
+```
 figureForge/
+|
 ├── common/                 # Homepage and custom 404 view
+│   ├── templatetags/
+│   ├── urls.py
+│   └── views.py
+|
 ├── figures/                # Figure catalog and CRUD
+│   ├── forms.py
+│   ├── models.py
+│   ├── urls.py
+│   └── views.py
+|
 ├── manufacturers/          # Manufacturer CRUD
+│   ├── forms.py
+│   ├── models.py
+│   ├── urls.py
+│   └── views.py
+|
 ├── materials/              # Material CRUD
+│   ├── choices.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── urls.py
+│   └── views.py
+│
 ├── reviews/                # Review CRUD
+│   ├── forms.py
+│   ├── models.py
+│   ├── urls.py
+│   └── views.py
+│
 ├── user/                   # Customer orders (Client model)
+│   ├── choices.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── urls.py
+│   └── views.py
+│
 ├── figureForge/            # Project settings and root URL configuration
 │   ├── settings.py
 │   └── urls.py
 ├── templates/               # Base, shared and application templates
+│   ├── common/
+│   ├── figures/
+│   ├── manufacturers/
+│   ├── materials/
+│   ├── reviews/
+│   ├── user/
+│   ├── shared/
+│   ├── 404.html
+│   └── base.html
+│
 ├── static/                  # Static assets
+│   ├── css/
+│   └── images/
+│
 ├── manage.py
 ├── requirements.txt
 ├── .env                     # Local only; do not commit
 └── README.md
-The six Django applications separate the project's responsibilities. The user app represents customer orders; it does not implement Django authentication.
-Database Schema
+```
+
+---
+
+# Database Schema
+
+The database contains five main application models:
+* Manufacturer — name, country
+* Material — unique name
+* Figure — title, character name, base price, height, unique slug, manufacturer, materials
+* Review — author name, rating, comment, creation date, figure
+* Client — name, unique email, order status, figure, chosen material, creation date
+
+  ```
+  Manufacturer (1) ──────── (N) Figure
+                                 │
+Material (N) ──────────── (N) ───┤
+                                 │
+Figure (1) ─────────────── (N) Review
+                                 
+Figure (1) ─────────────── (N) Client
+Material (1) ──────────── (N) Client
+
+```
+
 Model	Important fields	Relationships
 Manufacturer	name, country	One manufacturer can have many figures
 Material	name (unique)	Many-to-many with figures
